@@ -7,5 +7,7 @@ import java.util.List;
 @Data
 public class StudentResponse {
     List<StudentMark> studentMarkList;
+    String statusFilter;
+    Long subjectClassID;
 }
 
