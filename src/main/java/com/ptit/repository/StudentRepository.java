@@ -25,4 +25,7 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Query("select s from Student s where s.id = :idStudent and s.subject_class_id = :subjectClassId and (s.code like %:keyword% or s.name like %:keyword% or s.email like %:keyword%)")
     Optional<Student> findStudentByIdAndSubject_class_idAndKey(Long idStudent, Long subjectClassId, String keyword);
+
+    @Query("select s from Student s where s.code = :codeStudent")
+    Student findByCode(String codeStudent);
 }
