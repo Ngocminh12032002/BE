@@ -10,6 +10,8 @@ import com.ptit.repository.StudentRepository;
 import com.ptit.repository.SubjectClassRepository;
 import com.ptit.repository.SubjectRepository;
 import com.ptit.repository.TeacherRepository;
+import com.ptit.service.SubjectClassService;
+import com.ptit.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +32,9 @@ public class SubjectClassController {
 
     @Autowired
     private SubjectRepository subjectRepository;
+
+    @Autowired
+    private SubjectClassService subjectClassService;
 
     @GetMapping("/listClass/{id}")
     public ListClassResponse listClassResponse(@PathVariable Long id){
@@ -68,19 +73,7 @@ public class SubjectClassController {
     @GetMapping("/listClassByCourse/{courseId}/{teacherId}")
     public ListClassResponse listClassResponse(@PathVariable Long courseId, @PathVariable Long teacherId){
         ListClassResponse listClassResponse =  new ListClassResponse();
-        List<SubjectClassInfo> subjectClassInfos = new ArrayList<SubjectClassInfo>();
-        List<SubjectClass> subjectClasses = subjectClassRepository.findAllByTeacherIdAndCourseId(teacherId, courseId);
-        for(SubjectClass s: subjectClasses){
-            Long numberStudent = studentRepository.getNumberStudent(s.getId());
-            Subject subject = subjectRepository.findAllBySubjectId(s.getSubject_id());
-
-            SubjectClassInfo subjectClassInfo = new SubjectClassInfo();
-            subjectClassInfo.setSubject(subject);
-            subjectClassInfo.setNumberStudent(numberStudent);
-            subjectClassInfo.setSubjectClass(s);
-            subjectClassInfos.add(subjectClassInfo);
-        }
-        listClassResponse.setSubjectClassInfos(subjectClassInfos);
+        listClassResponse = subjectClassService.listClassByCourse(courseId, teacherId);
         return listClassResponse;
     }
 }

@@ -10,7 +10,6 @@ import java.util.*;
 @Repository
 public interface TeacherRepository  extends JpaRepository<Teacher, Long> {
     @Query("SELECT i from Teacher i WHERE i.username = :username AND i.password = :password")
-    Teacher login(@Param("username") String username, @Param("password") String password);
-
+    Teacher login(String username,String password);
 
 }

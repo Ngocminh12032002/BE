@@ -1,2 +1,4 @@
-package com.ptit.service.impl;public class SubjectServiceImpl {
+package com.ptit.service.impl;
+
+public class SubjectServiceImpl {
 }

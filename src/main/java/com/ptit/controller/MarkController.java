@@ -8,6 +8,7 @@ import com.ptit.model.SubjectClass;
 import com.ptit.repository.MarkRepository;
 import com.ptit.repository.StudentRepository;
 import com.ptit.repository.SubjectClassRepository;
+import com.ptit.service.MarkService;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,35 +29,16 @@ public class MarkController {
     @Autowired
     private SubjectClassRepository subjectClassRepository;
 
+    @Autowired
+    private MarkService markService;
+
     @PutMapping("/nhapdiem/{id}")
     public String nhapdiem(@PathVariable Long id, @RequestBody InputScoreRequest inputScoreRequest) {
         Mark mark = markRepository.findAllByStudent_id(id);
         Optional<Student> student = studentRepository.findById(id);
         Student student1 = student.get();
-        Optional<SubjectClass> subjectClass = subjectClassRepository.findById(Long.valueOf(student1.getSubject_class_id()));
-        SubjectClass subjectClass1 = subjectClass.get();
-
-        if (mark != null){
-        double score = (inputScoreRequest.getAssignment() * subjectClass1.getFactor_assignment() + inputScoreRequest.getAttendance() * subjectClass1.getFactor_attendance() + inputScoreRequest.getExam() * subjectClass1.getFactor_exam() + inputScoreRequest.getTest() * subjectClass1.getFactor_test()) / 100;
-        mark.setAssignment(inputScoreRequest.getAssignment());
-        mark.setExam(inputScoreRequest.getExam());
-        mark.setAttendance(inputScoreRequest.getAttendance());
-        mark.setTest(inputScoreRequest.getTest());
-        mark.setGpa(score);
-        markRepository.save(mark);
-        System.out.println(score);
-        }
-        else {
-            Mark mark1 = new Mark();
-            double score = (inputScoreRequest.getAssignment() * subjectClass1.getFactor_assignment() + inputScoreRequest.getAttendance() * subjectClass1.getFactor_attendance() + inputScoreRequest.getExam() * subjectClass1.getFactor_exam() + inputScoreRequest.getTest() * subjectClass1.getFactor_test()) / 100;
-            mark1.setAssignment(inputScoreRequest.getAssignment());
-            mark1.setExam(inputScoreRequest.getExam());
-            mark1.setAttendance(inputScoreRequest.getAttendance());
-            mark1.setTest(inputScoreRequest.getTest());
-            mark1.setGpa(score);
-            mark1.setStudent_id(Math.toIntExact(id));
-            markRepository.save(mark1);
-        }
+        double score = (inputScoreRequest.getAssignment() * 10 + inputScoreRequest.getAttendance() * 10 + inputScoreRequest.getExam() * 70 + inputScoreRequest.getTest() * 10) / 100;
+        boolean b = markService.InputScore(id, inputScoreRequest.getAttendance(), inputScoreRequest.getExam(), inputScoreRequest.getAssignment(), inputScoreRequest.getTest(), score);
         return "{\"results\": true}";
     }
 
@@ -107,15 +89,16 @@ public class MarkController {
                             // Tiến hành nhập điểm vào hệ thống
                             System.out.println(cellBValue);
                             Student student = studentRepository.findByCode(cellBValue);
-
-                            Mark mark = markRepository.findAllByStudent_id(student.getId());
-                            mark.setAttendance(cellEValue);
-                            mark.setTest(cellFValue);
-                            mark.setAssignment(cellGValue);
-                            mark.setExam(cellHValue);
+//
+//                            Mark mark = markRepository.findAllByStudent_id(student.getId());
+//                            mark.setAttendance(cellEValue);
+//                            mark.setTest(cellFValue);
+//                            mark.setAssignment(cellGValue);
+//                            mark.setExam(cellHValue);
                             double tbScore = (cellEValue * 10 + cellFValue * 10 + cellGValue * 10 + cellHValue * 70)/100;
-                            mark.setGpa(tbScore);
-                            markRepository.save(mark);
+//                            mark.setGpa(tbScore);
+//                            markRepository.save(mark);
+                            boolean b = markService.InputScore(student.getId(), cellEValue, cellHValue, cellGValue, cellFValue,tbScore);
                         }
                     }
                 }

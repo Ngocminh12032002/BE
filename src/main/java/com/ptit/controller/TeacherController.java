@@ -8,6 +8,7 @@ import com.ptit.model.TeacherCourse;
 import com.ptit.repository.CourseRepository;
 import com.ptit.repository.TeacherCourseRepository;
 import com.ptit.repository.TeacherRepository;
+import com.ptit.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,8 @@ public class TeacherController {
     @Autowired
     private CourseRepository courseRepository;
 
+    @Autowired
+    private TeacherService teacherService;
     @GetMapping("/")
     private String welcome(){
         return "1";
@@ -38,29 +41,9 @@ public class TeacherController {
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest loginRequest){
         LoginResponse loginResponse = new LoginResponse();
-        Teacher teacher = teacherRepository.login(loginRequest.getUsername(), loginRequest.getPassword());
-        List<TeacherCourse> teacherCourse = teacherCourseRepository.findAllByTeacher_id(teacher.getId());
-        List<Course> courseList = new ArrayList<Course>();
-        for (TeacherCourse teacherCourse1: teacherCourse) {
-            Optional<Course> course = courseRepository.findById(teacherCourse1.getCourse_id());
-            Course course1 = course.get();
-            courseList.add(course1);
-            System.out.println(course1);
-        }
-        if (teacher != null){
-            loginResponse.setResult("true");
-            loginResponse.setUsername(teacher.getUsername());
-            loginResponse.setName(teacher.getName());
-            loginResponse.setId(teacher.getId());
-            loginResponse.setDob(teacher.getDob());
-            loginResponse.setEmail(teacher.getEmail());
-            loginResponse.setCountry(teacher.getCountry());
-            loginResponse.setPhone_number(teacher.getPhone_number());
-            loginResponse.setCourse(courseList);
-        }
-        else {
-            loginResponse.setResult("false");
-        }
+        String username = loginRequest.getUsername();;
+        String password = loginRequest.getPassword();
+        loginResponse = teacherService.teacherLogin(username, password);
         return loginResponse;
     }
 }

@@ -18,8 +18,4 @@ import java.util.Optional;
 public class SubjectController {
     @Autowired
     private SubjectRepository subjectRepository;
-
-
-
-
 }
