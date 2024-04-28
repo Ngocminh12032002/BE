@@ -12,6 +12,10 @@ public class MarkServiceImpl implements MarkService {
     private MarkRepository markRepository;
     @Override
     public boolean InputScore(Long id, double Attendance, double Exam, double Assignment, double Test, double Gpa) {
+        if (Assignment < 0 || Assignment > 10 || Exam < 0 || Exam > 10 || Attendance < 0 || Attendance > 10 ||
+                Test < 0 || Test > 10 || Gpa < 0 || Gpa > 10) {
+            throw new IllegalArgumentException("Giá trị nhập vào phải nằm trong khoảng từ 0 đến 10");
+        }
         Mark mark = markRepository.findAllByStudent_id(id);
         mark.setAssignment(Assignment);
         mark.setExam(Exam);
