@@ -8,8 +8,6 @@ import com.ptit.model.SubjectClass;
 import com.ptit.repository.MarkRepository;
 import com.ptit.repository.StudentRepository;
 import com.ptit.repository.SubjectClassRepository;
-import com.ptit.service.StudentService;
-import com.ptit.service.impl.StudentServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,7 +26,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class StudentSerivceTest {
+public class StudentServiceImplTest {
 
     @Mock
     private StudentRepository studentRepository;
