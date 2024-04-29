@@ -100,7 +100,7 @@ public class StudentServiceImpl implements StudentService {
         String status = null;
         if (condition == 0){
             studentList = studentRepository.findAllBySubject_class_idAndKey(id, keyword);
-            status = "1";
+            status = "0";
         } else if (condition == 1) {
             List<Mark> markList = markRepository.findAllMarkPass();
             for (Mark mark: markList){
